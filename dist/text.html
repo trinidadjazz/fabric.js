@@ -88,11 +88,11 @@ const LimitedTextbox = fabric.util.createClass(fabric.Textbox, {
                     // }
                     return;
                 }
-                const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
-                if(newLinesLength > this.maxLines) {
-                    this.hiddenTextarea.value = this.text;
-                    return;
-                }   
+                // const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+                // if(newLinesLength > this.maxLines) {
+                //     this.hiddenTextarea.value = this.text;
+                //     return;
+                // }   
             }
         }
         if (this.maxLines && this.onEnter == true) {
@@ -118,7 +118,7 @@ canvas.add(
     width: 300,
     maxWidth: 300,
     maxLines: 2,
-    fontSizeDelta: 1.5
+    // fontSizeDelta: 1.5
   })
 );
 
