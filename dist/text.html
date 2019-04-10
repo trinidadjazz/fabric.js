@@ -1,0 +1,72 @@
+<html>
+<style>
+.canvas-container {
+  border: 1px solid gray;
+}
+</style>
+<script src="fabric.js"></script>
+
+<canvas width="600" height="300"></canvas>
+<script>
+const canvas = new fabric.Canvas(document.querySelector('canvas'));
+
+// Define `LimitedTextbox` class which extends `Textbox`
+const LimitedTextbox = fabric.util.createClass(fabric.Textbox, {
+    insertChars: function(text) {
+        console.log('here -insertchars');
+    },
+
+  // Override `insertChars` method
+  onInput: function(e) {
+    var nextText = this._splitTextIntoLines(this.hiddenTextarea.value).graphemeText;
+
+    var textareaSelection = this.fromStringToGraphemeSelection(
+      this.hiddenTextarea.selectionStart,
+      this.hiddenTextarea.selectionEnd,
+      this.hiddenTextarea.value
+    );
+
+    if (this.maxLines) {
+      const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+      console.log('newLineLength', newLinesLength);
+      console.log('max lines - ', this.maxLines);
+      if (newLinesLength > this.maxLines) {
+        return;
+      }
+    }
+    // var insertedText = nextText.slice(textareaSelection.selectionEnd - charDiff, textareaSelection.selectionEnd); 
+    // console.log(insertedText);
+    console.log(e);
+    console.log(this);
+    if (this.maxWidth && e.inputType != "insertLineBreak") {
+      const textWidthUnderCursor = this.getLineWidth(this.get2DCursorLocation().lineIndex);
+      var ctx = this.getMeasuringContext();
+      console.log(ctx.measureText(e.data).width);
+      if (textWidthUnderCursor + ctx.measureText(e.data).width > this.maxWidth) {
+        // chars = '\n' + chars;
+        console.log('here');
+        return;
+      }
+    }
+
+
+    // Call parent class method
+    this.callSuper('onInput', e);
+  }
+
+});
+
+// Create limited text box with max width 300px and max 2 lines
+canvas.add(
+  new LimitedTextbox('text', {
+    top: 10,
+    left: 10,
+    width: 300,
+    maxWidth: 300,
+    maxLines: 2
+  })
+);
+
+canvas.renderAll();
+</script>
+</html>
