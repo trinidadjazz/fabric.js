@@ -17,7 +17,6 @@ const LimitedTextbox = fabric.util.createClass(fabric.Textbox, {
     },
 
     onKeyDown: function(e) {
-
         if(e.key == "Enter") {
             this.onEnter = true;
         }
@@ -76,18 +75,18 @@ const LimitedTextbox = fabric.util.createClass(fabric.Textbox, {
 
     // Override `insertChars` method
     onInput: function(e) {
-        console.log(this);
         if (this.maxWidth && this.onEnter!=true) {
-            console.log(this.keyCode);
-            if(this.keyCode > 64) {
+            if(this.keyCode > 64 || this.keyCode == 32) {
                 const textWidthUnderCursor = this.getLineWidth(this.get2DCursorLocation().lineIndex);
                 var char_width = this._measureWord(e.data, this.get2DCursorLocation().lineIndex);
                 if (textWidthUnderCursor + char_width > this.maxWidth) {
-                    if(this.fontSizeDelta && this.fontSizeDelta > 0) {
-                        if (this.cacheWidth > this.maxWidth) {
-                            this.fontSize -= 1;
-                        }
-                    }
+                    this.hiddenTextarea.value = this.text;
+                    // if(this.fontSizeDelta && this.fontSizeDelta > 0) {
+                    //     if (this.cacheWidth > this.maxWidth) {
+                    //         this.fontSize -= 1;
+                    //     }
+                    // }
+                    return;
                 }
                 const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
                 if(newLinesLength > this.maxLines) {
