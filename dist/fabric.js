@@ -28008,7 +28008,6 @@ fabric.util.object.extend(fabric.IText.prototype, /** @lends fabric.IText.protot
         widthBeforeCursor = this._getWidthBeforeCursor(lineIndex, charIndex),
         indexOnOtherLine = this._getIndexOnLine(lineIndex + 1, widthBeforeCursor),
         textAfterCursor = this._textLines[lineIndex].slice(charIndex);
-    console.log(textAfterCursor.length + indexOnOtherLine + 2);
     return textAfterCursor.length + indexOnOtherLine + 2;
   },
 

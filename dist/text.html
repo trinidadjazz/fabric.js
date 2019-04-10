@@ -16,43 +16,95 @@ const LimitedTextbox = fabric.util.createClass(fabric.Textbox, {
         console.log('here -insertchars');
     },
 
-  // Override `insertChars` method
-  onInput: function(e) {
-    var nextText = this._splitTextIntoLines(this.hiddenTextarea.value).graphemeText;
+    onKeyDown: function(e) {
 
-    var textareaSelection = this.fromStringToGraphemeSelection(
-      this.hiddenTextarea.selectionStart,
-      this.hiddenTextarea.selectionEnd,
-      this.hiddenTextarea.value
-    );
+        if(e.key == "Enter") {
+            this.onEnter = true;
+        }
+        this.keyCode = e.keyCode;
 
-    if (this.maxLines) {
-      const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
-      console.log('newLineLength', newLinesLength);
-      console.log('max lines - ', this.maxLines);
-      if (newLinesLength > this.maxLines) {
-        return;
-      }
+
+        if (this.maxWidth && this.onEnter!=true) {
+            if(this.keyCode > 64) {
+                const textWidthUnderCursor = this.getLineWidth(this.get2DCursorLocation().lineIndex);
+                var char_width = this._measureWord(e.key, this.get2DCursorLocation().lineIndex);
+                if (textWidthUnderCursor + char_width > this.maxWidth) {
+                    return;
+                }
+                const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+                if(newLinesLength > this.maxLines) {
+                    return;
+                }   
+            }
+        }
+
+        if (this.maxLines && this.onEnter == true) {
+            const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+            if(newLinesLength >= this.maxLines) {
+                return;
+            }
+        }
+        // Call parent class method
+        this.callSuper('onKeyDown', e);
+    },
+    onKeyUp: function(e) {
+        
+        if (this.maxWidth && this.onEnter!=true) {
+            if(this.keyCode > 64) {
+                const textWidthUnderCursor = this.getLineWidth(this.get2DCursorLocation().lineIndex);
+                var char_width = this._measureWord(e.key, this.get2DCursorLocation().lineIndex);
+                if (textWidthUnderCursor + char_width > this.maxWidth) {
+                    return;
+                }
+                const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+                if(newLinesLength > this.maxLines) {
+                    return;
+                }   
+            }
+        }
+
+        if (this.maxLines && this.onEnter == true) {
+            const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+            if(newLinesLength >= this.maxLines) {
+                return;
+            }
+        }
+        
+        // Call parent class method
+        this.callSuper('onKeyUp', e);
+    },
+
+    // Override `insertChars` method
+    onInput: function(e) {
+        console.log(this);
+        if (this.maxWidth && this.onEnter!=true) {
+            console.log(this.keyCode);
+            if(this.keyCode > 64) {
+                const textWidthUnderCursor = this.getLineWidth(this.get2DCursorLocation().lineIndex);
+                var char_width = this._measureWord(e.data, this.get2DCursorLocation().lineIndex);
+                if (textWidthUnderCursor + char_width > this.maxWidth) {
+                    this.hiddenTextarea.value = this.text;
+                    return;
+                }
+                const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+                if(newLinesLength > this.maxLines) {
+                    this.hiddenTextarea.value = this.text;
+                    return;
+                }   
+            }
+        }
+        if (this.maxLines && this.onEnter == true) {
+            const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
+            if(newLinesLength >= this.maxLines) {
+                this.onEnter = false;
+                this.hiddenTextarea.value = this.text;
+                return;
+            }
+        }
+        this.onEnter == false;
+        // Call parent class method
+        this.callSuper('onInput', e);
     }
-    // var insertedText = nextText.slice(textareaSelection.selectionEnd - charDiff, textareaSelection.selectionEnd); 
-    // console.log(insertedText);
-    console.log(e);
-    console.log(this);
-    if (this.maxWidth && e.inputType != "insertLineBreak") {
-      const textWidthUnderCursor = this.getLineWidth(this.get2DCursorLocation().lineIndex);
-      var ctx = this.getMeasuringContext();
-      console.log(ctx.measureText(e.data).width);
-      if (textWidthUnderCursor + ctx.measureText(e.data).width > this.maxWidth) {
-        // chars = '\n' + chars;
-        console.log('here');
-        return;
-      }
-    }
-
-
-    // Call parent class method
-    this.callSuper('onInput', e);
-  }
 
 });
 
