@@ -88,7 +88,6 @@ const LimitedTextbox = fabric.util.createClass(fabric.Textbox, {
                             this.fontSize -= 1;
                         }
                     }
-                    return;
                 }
                 const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
                 if(newLinesLength > this.maxLines) {
