@@ -44,7 +44,7 @@
             const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
             console.log(this.keyCode);
             if (this.maxWidth) {
-                if (this.keyCode > 64 || this.keyCode == 32) {
+                if (this.keyCode >= 49 || this.keyCode == 32) {
                     var lineIndex = this.get2DCursorLocation().lineIndex;
                     const textWidthUnderCursor = this.getLineWidth(lineIndex);
                     var char_width = this._measureWord(e.data, lineIndex);
