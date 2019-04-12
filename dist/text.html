@@ -29,6 +29,7 @@
 
         // Override `insertChars` method
         onInput: function (e) {
+            console.log(this.hiddenTextarea.value);
             var textareaSelection = this.fromStringToGraphemeSelection(
                 this.hiddenTextarea.selectionStart,
                 this.hiddenTextarea.selectionEnd,
@@ -52,10 +53,17 @@
                             this.hiddenTextarea.value = this.text;
                             return;
                         }
+
+                        if(!this.textLines[lineIndex].includes(' ')) {
+                            var value = this.hiddenTextarea.value;
+                            value = value.substring(0, value.length - 1) + '\n' + value[value.length - 1];
+                            this.hiddenTextarea.value = value;
+                        }
                         // this.text += '\n';
                         // this.textLines[lineIndex] += '\n';
+
                         var value = this.hiddenTextarea.value;
-                        value = value.substring(0, value.length - 1) + '\n' + value[value.length - 1];
+                        // value = value.substring(0, value.length - 1) + '\n' + value[value.length - 1];
                         this.hiddenTextarea.value = value;
                         console.log(this.textLines);
                         if(this.fontSizeDelta && this.fontSizeDelta > 0) {
@@ -91,7 +99,7 @@
             left: 10,
             width: 300,
             maxWidth: 300,
-            // maxLines: 2,
+            maxLines: 3,
             // fontSizeDelta: 1.5
         })
     );
