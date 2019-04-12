@@ -29,7 +29,6 @@
 
         // Override `insertChars` method
         onInput: function (e) {
-            console.log(this.hiddenTextarea.value);
             var textareaSelection = this.fromStringToGraphemeSelection(
                 this.hiddenTextarea.selectionStart,
                 this.hiddenTextarea.selectionEnd,
@@ -42,36 +41,35 @@
             charDiff = nextCharCount - charCount;
             var insertedText = nextText.slice(textareaSelection.selectionEnd - charDiff, textareaSelection.selectionEnd);
             const newLinesLength = this._wrapText(this.textLines, this.maxWidth).length;
-            console.log(this.keyCode);
             if (this.maxWidth) {
                 if (this.keyCode >= 49 || this.keyCode == 32) {
                     var lineIndex = this.get2DCursorLocation().lineIndex;
                     const textWidthUnderCursor = this.getLineWidth(lineIndex);
                     var char_width = this._measureWord(e.data, lineIndex);
                     if (textWidthUnderCursor + char_width > this.maxWidth) {
-                        if(newLinesLength == this.maxLines) {
-                            this.hiddenTextarea.value = this.text;
-                            return;
-                        }
 
                         if(!this.textLines[lineIndex].includes(' ')) {
                             var value = this.hiddenTextarea.value;
-                            value = value.substring(0, value.length - 1) + '\n' + value[value.length - 1];
-                            this.hiddenTextarea.value = value;
-                        }
-                        // this.text += '\n';
-                        // this.textLines[lineIndex] += '\n';
-
-                        var value = this.hiddenTextarea.value;
-                        // value = value.substring(0, value.length - 1) + '\n' + value[value.length - 1];
-                        this.hiddenTextarea.value = value;
-                        console.log(this.textLines);
-                        if(this.fontSizeDelta && this.fontSizeDelta > 0) {
-                            if (this.cacheWidth > this.maxWidth) {
-                                this.fontSize -= 1;
+                            if(newLinesLength < this.maxLines) {
+                                value = value.substring(0, value.length - 1) + '\n' + value[value.length - 1];
+                            } else {
+                                value = value.substring(0, value.length - 1);
                             }
+                            this.hiddenTextarea.value = value;
+                            console.log('here');
+                            console.log(value);
                         }
-                        // return;
+
+                        if(newLinesLength == this.maxLines) {
+
+                            if(this.fontSizeDelta && this.fontSizeDelta > 0) {
+                                if (this.cacheWidth > this.maxWidth) {
+                                    this.fontSize = this.fontSize/this.fontSizeDelta;
+                                }
+                            }
+                            // this.hiddenTextarea.value = this.text;
+                            // return;
+                        }
                     }
                     if(newLinesLength > this.maxLines) {
                         this.hiddenTextarea.value = this.text;
@@ -100,7 +98,7 @@
             width: 300,
             maxWidth: 300,
             maxLines: 3,
-            // fontSizeDelta: 1.5
+            fontSizeDelta: 1.1
         })
     );
 
